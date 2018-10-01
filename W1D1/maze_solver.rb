@@ -1,7 +1,6 @@
-require 'byebug'
 class Maze_Solver
 
-  attr_reader :path, :start_idx, :end_idx, :maze
+  attr_accessor :path, :start_idx, :end_idx, :maze
 
   def initialize(filename)
     @maze = load_map(filename)
@@ -30,17 +29,19 @@ class Maze_Solver
   def find_path(start_idx , end_idx, grid)
 
     if ( start_idx == end_idx )
-      return [start_idx[0] , start_idx[1]]
+      return [end_idx]
     end
 
     #1
     x = start_idx[0] - 1
     y = start_idx[1]
     if ( valid_position( x , y , grid) )
-      grid[x][y] = "X"
-      path = find_path(x , y, grid)
+      new_grid = grid.dup
+      # not to put X mark insted of E
+      new_grid[x][y] = "X" unless [x,y] == end_idx
+      path = find_path([x,y] , end_idx, new_grid)
       unless ( path.nil? )
-        return [[x,y]] + path
+        return path.unshift([start_idx[0], start_idx[1]] )
       end
     end
 
@@ -48,79 +49,46 @@ class Maze_Solver
     x = start_idx[0] + 1
     y = start_idx[1]
     if ( valid_position( x , y , grid) )
-      grid[x][y] = "X"
-      path = find_path(x , y, grid)
+      new_grid = grid.dup
+      # not to put X mark insted of E
+      new_grid[x][y] = "X" unless [x,y] == end_idx
+      path = find_path([x,y] , end_idx, new_grid)
       unless ( path.nil? )
-        return [[x,y]] + path
+        return path.unshift([start_idx[0], start_idx[1]] )
       end
     end
     #3
     x = start_idx[0]
     y = start_idx[1] - 1
     if ( valid_position( x , y , grid) )
-      grid[x][y] = "X"
-      path = find_path(x , y, grid)
+      new_grid = grid.dup
+      # not to put X mark insted of E
+      new_grid[x][y] = "X" unless [x,y] == end_idx
+      path = find_path([x,y] , end_idx, new_grid)
       unless ( path.nil? )
-        return [[x,y]] + path
+        return path.unshift([start_idx[0], start_idx[1]] )
       end
     end
     #4
     x = start_idx[0]
     y = start_idx[1] + 1
     if ( valid_position( x , y , grid) )
-      grid[x][y] = "X"
-      path = find_path(x , y, grid)
+      new_grid = grid.dup
+      # not to put X mark insted of E
+      new_grid[x][y] = "X" unless [x,y] == end_idx
+      path = find_path([x,y] , end_idx, new_grid)
       unless ( path.nil? )
-        return [[x,y]] + path
-      end
-    end
-    #5
-    x = start_idx[0] + 1
-    y = start_idx[1] + 1
-    if ( valid_position( x , y , grid) )
-      grid[x][y] = "X"
-      path = find_path(x , y, grid)
-      unless ( path.nil? )
-        return [[x,y]] + path
-      end
-    end
-    #6
-    x = start_idx[0] - 1
-    y = start_idx[1] - 1
-    if ( valid_position( x , y , grid) )
-      grid[x][y] = "X"
-      path = find_path(x , y, grid)
-      unless ( path.nil? )
-        return [[x,y]] + path
-      end
-    end
-    #7
-    x = start_idx[0] - 1
-    y = start_idx[1] + 1
-    if ( valid_position( x , y , grid) )
-      grid[x][y] = "X"
-      path = find_path(x , y, grid)
-      unless ( path.nil? )
-        return [[x,y]] + path
-      end
-    end
-    #8
-    x = start_idx[0] + 1
-    y = start_idx[1] - 1
-    if ( valid_position( x , y , grid) )
-      grid[x][y] = "X"
-      path = find_path(x , y, grid)
-      unless ( path.nil? )
-        return [[x,y]] + path
+        return path.unshift([start_idx[0], start_idx[1]] )
       end
     end
 
-
+    return nil
   end
 
   def valid_position( x , y , grid)
-    #make sure the x,y posion in the grid borders and its empty cell
-    x > -1 && y > -1 && x < grid[0].length && y < grid.length && grid[x][y] == " "
+    #make sure the x,y posion in the grid borders and its empty cell or its End
+    (x > 0 && y > 0 && x < grid.length && y < grid[0].length && grid[x][y] == " ") || @end_idx == [x,y]
   end
+
 
 end
