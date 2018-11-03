@@ -1,0 +1,29 @@
+div {
+  height: 200px;
+  width: 200px;
+  padding: 50px;
+  border: 5px solid black;
+  
+  
+  
+}
+
+#first-div {
+  
+  background-color: #39cccc;
+}
+
+#second-div {
+  box-sizing: border-box;
+    height: auto;
+  background-color: #ff4136;
+}
+
+#thired-div{
+  height: auto;
+  
+}
+
+p {
+  background-color: #7fdbff;
+}
